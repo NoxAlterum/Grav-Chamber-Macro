@@ -4,16 +4,19 @@ Created by Chrissy
 
 Plays the three training minigames for you by watching the screen:
 
-| Preset           | Minigame      | What it does                                                   |
-|------------------|---------------|----------------------------------------------------------------|
-| Health           | Timing bar    | Presses F as the red cursor crosses the middle of the green zone |
-| Physical/Agility | WASD letters  | Reads the letters (repeats included, e.g. W-W-D-A-S) and types them |
-| Ki               | Circles       | Clicks each circle for a "Perfect!" as its white ring closes onto it |
+| Preset           | Minigame      | What it does                                                         |
+|------------------|---------------|----------------------------------------------------------------------|
+| Health           | Timing bar    | Presses F as the white cursor crosses the middle of the gold zone     |
+| Physical/Agility | WASD letters  | Types each letter as it turns white (repeats included, e.g. W-W-D-A)  |
+| Ki               | Circles       | Clicks each circle for a "PERFECT" as its ring closes onto its edge   |
 
-Works in the Gravity Chamber and the Hyperbolic Time Chamber, at any screen resolution
-(720p to 4K), any Windows display scaling (100%, 150%, 200%...), on any monitor, and with the
-game at 30 or 60 fps. Health and Ki measure your PC's lag as they play and correct their own
-timing. There's a dark mode too (button at the bottom right).
+Works in the Gravity Chamber, the Hyperbolic Time Chamber (white or golden floor) and the
+power-up mission's red-brown ground, at any screen resolution from 720p up, any Windows display
+scaling (100%, 150%, 200%), on any monitor, and with the game at 30 or 60 fps. Health and Ki
+measure your PC's lag as they play and correct their own timing. There's a dark mode too
+(button at the bottom right).
+
+Updated for the new training UI (October 2026).
 
 ---
 
@@ -26,11 +29,10 @@ Grav Chamber Macro/
 ├── Grav Chamber Macro.exe   (or Grav_Chamber_Macro.py)
 ├── README.txt
 └── templates/
-    ├── w.png  a.png  s.png  d.png
-    └── (variants like w2.png, d3.png)
+    └── w.png  a.png  s.png  d.png
 ```
 
-The letter templates only need to show the letter's shape, so they work at every resolution.
+The letter templates only hold each letter's shape, so the same four work at every resolution.
 You don't need to make your own.
 
 Running the .py instead of the .exe needs Python 3.10+ and:
@@ -43,14 +45,19 @@ Running the .py instead of the .exe needs Python 3.10+ and:
 
 1. In Roblox, walk into the training so its UI is showing.
 2. Click the preset for that training (Health, Physical/Agility or Ki).
-3. Click **Select Region (Drag)** and drag a box:
-   - **Health:** over the bar with the green zone and red cursor.
-   - **Physical/Agility:** around the row where the letters appear, wide enough for 5 letters.
-     Leave a little of the navy box around them.
-   - **Ki:** around the whole square the circles appear in.
-4. Check the preview. The line under it says what the macro sees ("Sees: W S A D A (white)",
-   "Sees: bar | green zone yes | red cursor yes", "Sees: 1 circle(s), 1 with a ring").
-   If it doesn't see the game, drag the region again.
+3. Set the region it watches:
+   - **Health:** click **Find Bar**. It finds the timing bar on screen by itself and sets the
+     region to fit it exactly. (Or drag a rough box around the bar - it snaps to the bar.)
+     You can even skip this: started with no region, Health looks for the bar itself. And if
+     the bar isn't where it used to be (the game window moved), it finds it again on its own.
+   - **Physical/Agility:** click **Select Region (Drag)** and drag a box around the row where
+     the letters appear - under "Progression", above "WASD or ARROW KEYS" - wide enough for
+     5 letters.
+   - **Ki:** click **Select Region (Drag)** and drag a box over the whole game. The circles
+     can appear almost anywhere, so a box over the whole screen is the safe choice.
+4. Check the preview. The line under it says what the macro sees ("Sees: S (white)",
+   "Sees: bar | gold zone yes | white cursor yes", "Sees: 1 Ki circle(s)").
+   If it doesn't see the game, set the region again.
 5. Click back into Roblox and press **F6** to start. Press **F6** again to stop.
 
 Each preset remembers its own region, and all settings are saved for next time.
@@ -62,19 +69,30 @@ Each preset remembers its own region, and all settings are saved for next time.
 **Physical/Agility**
 - *Letter match* (default 0.60): how closely a shape must match a letter. Real letters score
   0.8-1.0, so you should never need to change it.
-- *Key gap* (default 30 ms): pause between letters. Raise it if the game drops letters.
-- *Wait before typing* (default 40 ms): letters must hold still this long before typing,
-  so a sequence is never typed while it's still appearing.
+- *Key gap* (default 30 ms): the shortest time between two letters.
+- *Wait before typing* (default 40 ms): a letter must read the same for this long before it's
+  typed, so a letter is never typed while it's still popping in.
+
+A wrong key fails the round, so the macro only types the white letter, one at a time, and the
+next one once the game has turned the last one green.
 
 **Health**
 - *Press lead* (default 35 ms): the starting guess for your lag. The macro watches where the
-  cursor stops on every hit and corrects itself. The status line shows "lead now ... ms".
+  cursor freezes on every hit and corrects itself. The status line shows "lead now ... ms".
   If it keeps missing, it tries other timings until it hits again.
 
 **Ki**
 - *Click lead* (default 25 ms): the starting guess for your lag. After every click the macro
   sees exactly when the game took it and corrects itself within a few clicks. The status line
   shows "timing ... ms".
+
+The macro also reads the game's verdict after each click. If clicks keep coming out "GOOD"
+instead of "PERFECT" (a floor that makes the circles hard to measure, say), it tries slightly
+different timings until they're PERFECT again; the status line then shows "adjusted ... ms".
+Every circle is clicked before it can time out, so there are no MISSes, and never so early
+that it would be BAD. That includes a circle that appears right where the last one is still
+fading out, one that's hidden for a moment by a popup or the LEVEL UP banner, and the moment
+the screen darkens on a level up. The LEVEL UP banner's own numbers are never clicked.
 
 For both, the timing it learned is saved when you stop, so the next session starts calibrated.
 You normally never need to touch these.
@@ -86,7 +104,11 @@ You normally never need to touch these.
 ## Troubleshooting
 
 **The preview shows the wrong spot or "Sees: no ..."**
-Drag the region again with the training UI on screen.
+Set the region again with the training UI on screen (for Health, just click Find Bar).
+
+**Find Bar says it couldn't find the Health bar**
+The bar has to be on screen when you click it: open the Health training first. If the
+FAILED message is showing, wait for the bar to come back and click again.
 
 **Keys or clicks don't reach the game**
 Make sure Roblox is the focused window. If Roblox was started as administrator, run the macro
@@ -95,12 +117,13 @@ as administrator too (right-click → Run as administrator).
 **Health presses land early or late**
 Give it a few presses to calibrate. If it's still off, change *Press lead* by 10-20 ms.
 
-**Ki clicks get "Okay." instead of "Perfect!"**
-Give it a few clicks to calibrate. If it's still off, change *Click lead* by 10 ms at a time.
+**Ki clicks get "GOOD" instead of "PERFECT"**
+Give it a few clicks: it calibrates itself. If it's still off after 10 or so, change
+*Click lead* by 10 ms at a time.
 
 **Physical/Agility types the wrong letter**
 Check what the preview says it sees. If a letter is misread, the game's font may have changed.
-Crop a screenshot tightly around that letter and save it in templates/ as w4.png, a4.png, etc.
+Crop a screenshot tightly around that letter and save it in templates/ as w2.png, a2.png, etc.
 
 ---
 
