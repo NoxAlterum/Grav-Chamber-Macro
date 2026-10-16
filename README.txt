@@ -35,10 +35,6 @@ Grav Chamber Macro/
 The letter templates only hold each letter's shape, so the same four work at every resolution.
 You don't need to make your own.
 
-Running the .py instead of the .exe needs Python 3.10+ and:
-
-    pip install -r requirements.txt
-
 ---
 
 ## How to use
