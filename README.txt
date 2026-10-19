@@ -10,8 +10,10 @@ Plays the three training minigames for you by watching the screen:
 | Physical/Agility | WASD letters  | Types each letter as it turns white (repeats included, e.g. W-W-D-A)  |
 | Ki               | Circles       | Clicks each circle for a "PERFECT" as its ring closes onto its edge   |
 
-Works in the Gravity Chamber, the Hyperbolic Time Chamber (white or golden floor) and the
-power-up mission's red-brown ground, at any screen resolution from 720p up, any Windows display
+Works in the Gravity Chamber, the Hyperbolic Time Chamber (white or golden floor), the
+power-up mission's red-brown ground and the shadow dummy's training on the blue night arena
+(its circles come faster and their rings close faster - Ki notices that by itself within the
+first few circles), at any screen resolution from 720p up, any Windows display
 scaling (100%, 150%, 200%), on any monitor, and with the game at 30 or 60 fps. Health and Ki
 measure your PC's lag as they play and correct their own timing. There's a dark mode too
 (button at the bottom right).
@@ -53,8 +55,9 @@ Running the .py instead of the .exe needs Python 3.10+ and:
    - **Physical/Agility:** click **Select Region (Drag)** and drag a box around the row where
      the letters appear - under "Progression", above "WASD or ARROW KEYS" - wide enough for
      5 letters.
-   - **Ki:** click **Select Region (Drag)** and drag a box over the whole game. The circles
-     can appear almost anywhere, so a box over the whole screen is the safe choice.
+   - **Ki:** click **Whole Screen**. The circles can appear almost anywhere (around the shadow
+     dummy too), so Ki watches the whole game. (A box you drag yourself works too - just make
+     sure it covers everywhere a circle can appear.)
 4. Check the preview. The line under it says what the macro sees ("Sees: S (white)",
    "Sees: bar | gold zone yes | white cursor yes", "Sees: 1 Ki circle(s)").
    If it doesn't see the game, set the region again.
@@ -83,12 +86,17 @@ next one once the game has turned the last one green.
 
 **Ki**
 - *Click lead* (default 25 ms): the starting guess for your lag. After every click the macro
-  sees exactly when the game took it and corrects itself within a few clicks. The status line
-  shows "timing ... ms".
+  sees exactly when the game took it and corrects itself within a few clicks.
 
-The macro also reads the game's verdict after each click. If clicks keep coming out "GOOD"
-instead of "PERFECT" (a floor that makes the circles hard to measure, say), it tries slightly
-different timings until they're PERFECT again; the status line then shows "adjusted ... ms".
+The status line counts the game's verdicts as it goes ("40 Perfect, 2 Good") and shows the
+timing it's using. It also reads how fast the rings close (the shadow dummy's close faster:
+the status line then shows "rings 1.4x"). If clicks keep coming out "GOOD" instead of
+"PERFECT" (slower internet, a slow PC, a floor that makes the circles hard to measure), it
+tries other timings until they're PERFECT again, and remembers that for next time.
+It finds each circle by the circle's own colours (the dark disk, its number, the cream-and-
+orange ring), so whatever is behind it doesn't matter: your character, a sword, a tail, any
+floor. Even if part of the ring can't be seen, the circles' clockwork timing still tells it
+when to click.
 Every circle is clicked before it can time out, so there are no MISSes, and never so early
 that it would be BAD. That includes a circle that appears right where the last one is still
 fading out, one that's hidden for a moment by a popup or the LEVEL UP banner, and the moment
@@ -118,8 +126,11 @@ as administrator too (right-click → Run as administrator).
 Give it a few presses to calibrate. If it's still off, change *Press lead* by 10-20 ms.
 
 **Ki clicks get "GOOD" instead of "PERFECT"**
-Give it a few clicks: it calibrates itself. If it's still off after 10 or so, change
-*Click lead* by 10 ms at a time.
+1. Click **Whole Screen**, so it can see every circle from the moment it appears.
+2. Give it 10-15 clicks: it measures your lag, the ring speed and the game's verdicts, and
+   corrects itself. Leave it running - stopping and starting is fine too, it remembers.
+3. Only if it's still mostly GOOD after 20 clicks: change *Click lead* by 20 ms at a time
+   (higher = earlier clicks).
 
 **Physical/Agility types the wrong letter**
 Check what the preview says it sees. If a letter is misread, the game's font may have changed.
